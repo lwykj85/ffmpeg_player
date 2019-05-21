@@ -86,7 +86,6 @@ void seekTo(int mesc) {
     ffmpegVideo->queue.clear();
     av_seek_frame(pFormatCtx, ffmpegVideo->index, (int64_t) (mesc /av_q2d(ffmpegVideo->time_base)), AVSEEK_FLAG_BACKWARD);
     av_seek_frame(pFormatCtx, ffmpegMusic->index, (int64_t) (mesc /av_q2d(ffmpegMusic->time_base)), AVSEEK_FLAG_BACKWARD);
-
 }
 
 void *begin(void *args) {
@@ -184,13 +183,17 @@ Java_com_houde_ffmpeg_player_VideoView_play(JNIEnv *env, jobject instance, jstri
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_houde_ffmpeg_player_VideoView_display(JNIEnv *env, jobject instance, jobject surface) {
+Java_com_houde_ffmpeg_player_VideoView_initPlayer(JNIEnv *env, jobject instance, jobject surface) {
     //得到界面
     if (window) {
         ANativeWindow_release(window);
         window = 0;
     }
     window = ANativeWindow_fromSurface(env, surface);
+    if(window == NULL){
+        LOGE("%s","window is NULL !!!");
+        return;
+    }
     if (ffmpegVideo && ffmpegVideo->codec) {
         ANativeWindow_setBuffersGeometry(window, ffmpegVideo->codec->width,
                                          ffmpegVideo->codec->height,

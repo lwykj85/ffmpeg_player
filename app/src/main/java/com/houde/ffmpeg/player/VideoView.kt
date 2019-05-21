@@ -23,6 +23,11 @@ class VideoView (context: Context, attrs: AttributeSet? = null, defStyleAttr: In
     override fun surfaceCreated(holder: SurfaceHolder?) {
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        stop()
+        release()
+    }
     constructor(context: Context):this(context,null)
     constructor(context: Context,attrs: AttributeSet?):this(context,attrs,0)
     private var surface : Surface = holder.surface
@@ -34,7 +39,7 @@ class VideoView (context: Context, attrs: AttributeSet? = null, defStyleAttr: In
             return
         }
         field = value
-        display(surface)
+        initPlayer(surface)
     }
     fun play(){
         if(path == null || path.isNullOrEmpty()){
@@ -46,7 +51,7 @@ class VideoView (context: Context, attrs: AttributeSet? = null, defStyleAttr: In
 
     external fun play(path: String): Int
 
-    external fun display(surface: Surface)
+    external fun initPlayer(surface: Surface)
 
     external fun release()
 
